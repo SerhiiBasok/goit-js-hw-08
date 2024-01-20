@@ -101,13 +101,13 @@ imagesContainer.addEventListener("click", (event) => {
       {
         onShow: () => {
           document.addEventListener("keydown", keyDown);
-          // Додаємо сірий фон під модальне вікно
-          document.body.classList.add("show-modal");
+
+          document.body.style.overflow = "hidden";
         },
         onClose: () => {
           document.removeEventListener("keydown", keyDown);
-          // Видаляємо сірий фон при закритті модального вікна
-          document.body.classList.remove("show-modal");
+
+          document.body.style.overflow = "auto";
         },
       }
     );

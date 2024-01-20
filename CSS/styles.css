@@ -21,7 +21,6 @@
   width: 360px;
   height: 200px;
   object-fit: cover;
-
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease-in-out;
 }
@@ -30,18 +29,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(46, 47, 66, 0.8);
+  background-color: transparent; /* Змінено на transparent */
   width: 100%;
   height: 100%;
   max-width: 1112px;
   max-height: 640px;
   margin: auto;
+  z-index: 1001;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
 }
 
 .modal-container {
@@ -54,16 +53,5 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Додайте ці стилі в ваш стиль або вже існуючий файл стилів */
-body.show-modal::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8); /* Сірий колір фону */
-  z-index: 9999;
+  z-index: 1000;
 }
