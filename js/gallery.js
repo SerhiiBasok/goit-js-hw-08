@@ -65,40 +65,71 @@ const images = [
 ];
 
 //===========================================================================
-const container = document.querySelector(".gallery");
 
-function imagesTemplates() {
-  const result = images
-    .map((image) => {
-      return `<li class="gallery-item" data-id="${image.id}">
-        <a class="gallery-link" href="${image.original}">
-          <img
+const imagesContainer = document.querySelector(".gallery");
+
+function cardImageMarkup(images) {
+  return images
+    .map(({ preview, original, description }) => {
+      return `
+    <li class="gallery-item">
+        <a class="gallery-link" href="${original}">
+            <img
             class="gallery-image"
-            src="${image.preview}"
-            data-source="${image.original}"
-            alt="${image.description}"
-          />
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"
+            />
         </a>
-      </li>`;
+    </li>
+    `;
     })
-    .join(`\n\n`);
-
-  container.innerHTML = result;
+    .join("");
 }
-imagesTemplates();
+const imageMarkup = cardImageMarkup(images);
+imagesContainer.insertAdjacentHTML("beforeend", imageMarkup);
 
-container.addEventListener(`click`, (e) => {
-  if (e.target.nodeName !== `IMG`) return;
-  const instance = basicLightbox.create(`
-    <div class="modal">
-        <p>
-            Your first lightbox with just a few lines of code.
-            Yes, it's really that simple.
-        </p>
-    </div>
-`);
+let instance;
+imagesContainer.addEventListener("click", (event) => {
+  event.preventDefault();
 
-  instance.show();
+  if (event.target.classList.contains("gallery-image")) {
+    const originalImg = event.target.dataset.source;
+
+    instance = basicLightbox.create(
+      `
+      <img class="modal-image" src="${originalImg}">
+    `,
+      {
+        onShow: (instance) => {
+          document.body.style.overflow = "hidden";
+        },
+        onClose: (instance) => {
+          document.body.style.overflow = "";
+        },
+      }
+    );
+
+    instance.show();
+
+    document.addEventListener("keydown", keyDown);
+  }
 });
 
-// function showModal();
+function keyDown(event) {
+  if (
+    event.key === "Escape" ||
+    event.code === "Escape" ||
+    event.key === "Esc" ||
+    event.code === "Esc"
+  ) {
+    closeModal();
+  }
+}
+
+function closeModal() {
+  if (instance && instance.visible()) {
+    instance.close();
+    document.removeEventListener("keydown", keyDown);
+  }
+}
