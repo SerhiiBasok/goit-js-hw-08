@@ -8,9 +8,8 @@
   list-style: none;
 }
 
-.hover {
-  width: 1440px;
-  height: 696px;
+.gallery-image:hover {
+  transform: scale(1.05);
 }
 
 .gallery-item {
@@ -22,11 +21,9 @@
   width: 360px;
   height: 200px;
   object-fit: cover;
-  transition: transform 0.3s;
-}
 
-.gallery-item:hover .gallery-image {
-  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
 }
 
 .modal-image {
