@@ -84,11 +84,11 @@ function cardImageMarkup(images) {
     })
     .join("");
 }
+
 const imageMarkup = cardImageMarkup(images);
 imagesContainer.insertAdjacentHTML("beforeend", imageMarkup);
 
 let instance;
-let modalContainer;
 
 imagesContainer.addEventListener("click", (event) => {
   event.preventDefault();
@@ -96,18 +96,23 @@ imagesContainer.addEventListener("click", (event) => {
   if (event.target.classList.contains("gallery-image")) {
     const originalImg = event.target.dataset.source;
 
-    modalContainer = document.createElement("div");
-    modalContainer.classList.add("modal-container");
-
-    document.body.appendChild(modalContainer);
-
     instance = basicLightbox.create(
-      `<img class="modal-image" src="${originalImg}">`
+      `<img class="modal-image" src="${originalImg}">`,
+      {
+        onShow: () => {
+          document.addEventListener("keydown", keyDown);
+          // Додаємо сірий фон під модальне вікно
+          document.body.classList.add("show-modal");
+        },
+        onClose: () => {
+          document.removeEventListener("keydown", keyDown);
+          // Видаляємо сірий фон при закритті модального вікна
+          document.body.classList.remove("show-modal");
+        },
+      }
     );
 
     instance.show();
-
-    document.addEventListener("keydown", keyDown);
   }
 });
 
@@ -125,10 +130,5 @@ function keyDown(event) {
 function closeModal() {
   if (instance && instance.visible()) {
     instance.close();
-    const modalContainer = document.querySelector(".modal-container");
-    if (modalContainer) {
-      document.body.removeChild(modalContainer);
-    }
-    document.removeEventListener("keydown", keyDown);
   }
 }
