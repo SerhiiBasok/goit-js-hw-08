@@ -64,8 +64,6 @@ const images = [
   },
 ];
 
-//===========================================================================
-
 const imagesContainer = document.querySelector(".gallery");
 
 function cardImageMarkup(images) {
@@ -90,24 +88,21 @@ const imageMarkup = cardImageMarkup(images);
 imagesContainer.insertAdjacentHTML("beforeend", imageMarkup);
 
 let instance;
+let modalContainer;
+
 imagesContainer.addEventListener("click", (event) => {
   event.preventDefault();
 
   if (event.target.classList.contains("gallery-image")) {
     const originalImg = event.target.dataset.source;
 
+    modalContainer = document.createElement("div");
+    modalContainer.classList.add("modal-container");
+
+    document.body.appendChild(modalContainer);
+
     instance = basicLightbox.create(
-      `
-      <img class="modal-image" src="${originalImg}">
-    `,
-      {
-        onShow: (instance) => {
-          document.body.style.overflow = "hidden";
-        },
-        onClose: (instance) => {
-          document.body.style.overflow = "";
-        },
-      }
+      `<img class="modal-image" src="${originalImg}">`
     );
 
     instance.show();
@@ -130,6 +125,10 @@ function keyDown(event) {
 function closeModal() {
   if (instance && instance.visible()) {
     instance.close();
+    const modalContainer = document.querySelector(".modal-container");
+    if (modalContainer) {
+      document.body.removeChild(modalContainer);
+    }
     document.removeEventListener("keydown", keyDown);
   }
 }
