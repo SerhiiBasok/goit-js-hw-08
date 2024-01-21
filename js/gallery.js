@@ -96,23 +96,18 @@ imagesContainer.addEventListener("click", (event) => {
   if (event.target.classList.contains("gallery-image")) {
     const originalImg = event.target.dataset.source;
 
+    const modalContainer = document.createElement("div");
+    modalContainer.classList.add("modal-container");
+
+    document.body.appendChild(modalContainer);
+
     instance = basicLightbox.create(
-      `<img class="modal-image" src="${originalImg}">`,
-      {
-        onShow: () => {
-          document.addEventListener("keydown", keyDown);
-
-          document.body.style.overflow = "hidden";
-        },
-        onClose: () => {
-          document.removeEventListener("keydown", keyDown);
-
-          document.body.style.overflow = "auto";
-        },
-      }
+      `<img class="modal-image" width="1112" height="640" style="flex-shrink: 0;" src="${originalImg}">`
     );
 
     instance.show();
+
+    document.addEventListener("keydown", keyDown);
   }
 });
 
@@ -130,5 +125,10 @@ function keyDown(event) {
 function closeModal() {
   if (instance && instance.visible()) {
     instance.close();
+    document.removeEventListener("keydown", keyDown);
+    const modalContainer = document.querySelector(".modal-container");
+    if (modalContainer) {
+      document.body.removeChild(modalContainer);
+    }
   }
 }
