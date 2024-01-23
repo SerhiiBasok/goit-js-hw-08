@@ -90,28 +90,7 @@ imagesContainer.insertAdjacentHTML("beforeend", imageMarkup);
 
 let instance;
 
-imagesContainer.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  if (event.target.classList.contains("gallery-image")) {
-    const originalImg = event.target.dataset.source;
-
-    const modalContainer = document.createElement("div");
-    modalContainer.classList.add("modal-container");
-
-    document.body.appendChild(modalContainer);
-
-    instance = basicLightbox.create(
-      `<img class="modal-image" width="1112" height="640" style="flex-shrink: 0;" src="${originalImg}">`
-    );
-
-    instance.show();
-
-    document.addEventListener("keydown", keyDown);
-  }
-});
-
-function keyDown(event) {
+function closeOnEscapeKeyPress(event) {
   if (
     event.key === "Escape" ||
     event.code === "Escape" ||
@@ -125,10 +104,24 @@ function keyDown(event) {
 function closeModal() {
   if (instance && instance.visible()) {
     instance.close();
-    document.removeEventListener("keydown", keyDown);
-    const modalContainer = document.querySelector(".modal-container");
-    if (modalContainer) {
-      document.body.removeChild(modalContainer);
-    }
   }
 }
+
+imagesContainer.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  if (event.target.classList.contains("gallery-image")) {
+    const originalSrc = event.target.dataset.source;
+
+    instance = basicLightbox.create(`<img src="${originalSrc}" alt="Image">`, {
+      onShow: (instance) => {
+        document.addEventListener("keydown", closeOnEscapeKeyPress);
+      },
+      onClose: (instance) => {
+        document.removeEventListener("keydown", closeOnEscapeKeyPress);
+      },
+    });
+
+    instance.show();
+  }
+});
